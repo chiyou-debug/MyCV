@@ -1,4 +1,5 @@
 # MyCV - 个人简历在线编辑器
+<img width="1920" height="1032" alt="image" src="https://github.com/user-attachments/assets/94044e21-45fa-44fd-b1bd-c012a9b54112" />
 
 一款基于 Vue3 + Element Plus 开发的个人简历在线编辑工具，支持实时预览、PDF 导出、拖拽排序等功能。
 
