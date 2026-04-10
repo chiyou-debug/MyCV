@@ -203,9 +203,8 @@ MyCV/
 
 ## 📮 联系方式
 
-- 邮箱：your.email@example.com
-- GitHub：[yourusername](https://github.com/yourusername)
-
+- 邮箱：ruijie-fan@aliyun.com
+- 微信：KFCVme50_Now
 ---
 
 如果这个项目对您有帮助，请给个 ⭐ Star 支持一下！
