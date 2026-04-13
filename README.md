@@ -53,7 +53,7 @@
 1. **克隆项目**
 
 ```bash
-git clone https://github.com/yourusername/MyCV.git
+git clone https://github.com/chiyou-debug/MyCV.git
 cd MyCV
 ```
 
