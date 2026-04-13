@@ -1,6 +1,6 @@
 # MyCV - 个人简历在线编辑器
-<img width="1914" height="1032" alt="image" src="https://github.com/user-attachments/assets/6f30bae6-1789-4870-9f8e-64e88bc57812" />
 
+<img width="1914" height="1032" alt="image" src="https://github.com/user-attachments/assets/6f30bae6-1789-4870-9f8e-64e88bc57812" />
 
 一款基于 Vue3 + Element Plus 开发的个人简历在线编辑工具，支持实时预览、PDF 导出、拖拽排序等功能。
 
@@ -41,12 +41,69 @@
 
 ## 📦 安装与运行
 
-### 环境要求
+### 方式一：Docker 部署（推荐）
+
+#### 环境要求
+
+- Docker 20.10+
+- Docker Compose 2.0+
+
+#### 使用 Docker Compose 部署
+
+1. **克隆项目**
+
+```bash
+git clone https://github.com/yourusername/MyCV.git
+cd MyCV
+```
+
+2. **启动容器**
+
+```bash
+docker-compose up -d
+```
+
+3. **访问应用**
+
+打开浏览器访问 http://localhost:8080
+
+#### 使用 Docker 直接部署
+
+```bash
+# 构建镜像
+docker build -t mycv-app .
+
+# 运行容器
+docker run -d -p 8080:80 --name mycv-app mycv-app
+```
+
+#### 常用命令
+
+```bash
+# 查看容器状态
+docker-compose ps
+
+# 查看日志
+docker-compose logs -f
+
+# 停止容器
+docker-compose down
+
+# 重启容器
+docker-compose restart
+
+# 重新构建并启动
+docker-compose up -d --build
+```
+
+### 方式二：本地开发部署
+
+#### 环境要求
 
 - Node.js 16+
 - npm 或 yarn
 
-### 安装步骤
+#### 安装步骤
 
 1. **克隆项目**
 
@@ -107,10 +164,14 @@ npm run build
 MyCV/
 ├── public/                 # 静态资源
 │   └── cv-logo.svg        # 网站图标
-├── src/
+├── src/                    # 源代码
 │   ├── App.vue            # 主应用组件
 │   ├── main.js            # 入口文件
 │   └── style.css          # 全局样式
+├── Dockerfile             # Docker 构建文件
+├── docker-compose.yml     # Docker Compose 配置
+├── nginx.conf             # Nginx 配置文件
+├── .dockerignore          # Docker 忽略文件
 ├── index.html             # HTML 模板
 ├── package.json           # 项目配置
 ├── vite.config.js         # Vite 配置
@@ -187,6 +248,43 @@ MyCV/
 2. 在编辑面板添加表单
 3. 在预览区域添加展示组件
 
+## 🐳 Docker 配置说明
+
+### Dockerfile
+
+采用多阶段构建，减小最终镜像体积：
+
+- **构建阶段**：使用 Node.js 镜像构建应用
+- **生产阶段**：使用 Nginx Alpine 镜像提供服务
+
+### Nginx 配置
+
+- 支持前端路由（SPA 应用）
+- 开启 gzip 压缩
+- 静态资源缓存优化
+- 安全响应头设置
+
+### 自定义端口
+
+如需修改端口，编辑 `docker-compose.yml`：
+
+```yaml
+ports:
+  - "自定义端口:80" # 例如 "3000:80"
+```
+
+### 环境变量
+
+如需添加环境变量，在 `docker-compose.yml` 中添加：
+
+```yaml
+services:
+  mycv:
+    environment:
+      - NODE_ENV=production
+      - API_URL=https://api.example.com
+```
+
 ## 📄 许可证
 
 [MIT](LICENSE) License © 2024 [Your Name]
@@ -205,6 +303,7 @@ MyCV/
 
 - 邮箱：ruijie-fan@aliyun.com
 - 微信：KFCVme50_Now
+
 ---
 
 如果这个项目对您有帮助，请给个 ⭐ Star 支持一下！
