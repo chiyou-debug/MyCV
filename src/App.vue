@@ -537,6 +537,70 @@
                     :rows="3"
                   />
                 </el-form-item>
+                <el-form-item label="项目标签">
+                  <div class="tag-editor">
+                    <el-tag
+                      v-for="(tag, tIndex) in project.tags"
+                      :key="tIndex"
+                      closable
+                      :type="tag.type || 'primary'"
+                      @close="project.tags.splice(tIndex, 1)"
+                      class="edit-tag"
+                    >
+                      {{ tag.name }}
+                    </el-tag>
+                    <el-input
+                      v-model="projectTagInput[index]"
+                      placeholder="添加标签"
+                      size="small"
+                      @keyup.enter="addProjectTag(index)"
+                      style="width: 120px"
+                    />
+                  </div>
+                </el-form-item>
+                <el-form-item label="技术架构">
+                  <div class="tech-stack-container">
+                    <div
+                      v-for="(tech, key) in project.techStack"
+                      :key="key"
+                      class="tech-stack-item"
+                    >
+                      <span class="tech-key">{{ key }}：</span>
+                      <el-input
+                        v-model="project.techStack[key]"
+                        size="small"
+                        style="width: 200px"
+                      />
+                      <el-button
+                        type="danger"
+                        size="small"
+                        @click="delete project.techStack[key]"
+                        >删除</el-button
+                      >
+                    </div>
+                    <div class="add-tech-stack">
+                      <el-input
+                        v-model="newTechKey[index]"
+                        placeholder="技术类别"
+                        size="small"
+                        style="width: 100px"
+                      />
+                      <span class="tech-separator">：</span>
+                      <el-input
+                        v-model="newTechValue[index]"
+                        placeholder="技术内容"
+                        size="small"
+                        style="width: 200px"
+                      />
+                      <el-button
+                        type="primary"
+                        size="small"
+                        @click="addProjectTechStack(index)"
+                        >添加</el-button
+                      >
+                    </div>
+                  </div>
+                </el-form-item>
                 <el-form-item label="项目成果">
                   <div
                     v-for="(result, rIndex) in project.results"
@@ -890,6 +954,13 @@ const cvContent = ref(null);
 
 // 技能输入框值
 const skillInputValues = reactive({});
+
+// 项目标签输入框值
+const projectTagInput = reactive({});
+
+// 项目技术架构新增输入框值
+const newTechKey = reactive({});
+const newTechValue = reactive({});
 
 // 拖拽排序状态（技术栈分类）
 const dragIndex = ref(-1);
@@ -1467,6 +1538,35 @@ const addProjectResult = (projectIndex) => {
 
 const removeProjectResult = (projectIndex, resultIndex) => {
   resumeData.projects[projectIndex].results.splice(resultIndex, 1);
+};
+
+// 方法：添加项目标签
+const addProjectTag = (projectIndex) => {
+  const tagName = projectTagInput[projectIndex]?.trim();
+  if (tagName) {
+    const tagTypes = ["success", "warning", "danger", "primary", "info"];
+    const typeIndex =
+      resumeData.projects[projectIndex].tags.length % tagTypes.length;
+    resumeData.projects[projectIndex].tags.push({
+      name: tagName,
+      type: tagTypes[typeIndex],
+    });
+    projectTagInput[projectIndex] = "";
+  }
+};
+
+// 方法：添加项目技术架构
+const addProjectTechStack = (projectIndex) => {
+  const key = newTechKey[projectIndex]?.trim();
+  const value = newTechValue[projectIndex]?.trim();
+  if (key && value) {
+    if (!resumeData.projects[projectIndex].techStack) {
+      resumeData.projects[projectIndex].techStack = {};
+    }
+    resumeData.projects[projectIndex].techStack[key] = value;
+    newTechKey[projectIndex] = "";
+    newTechValue[projectIndex] = "";
+  }
 };
 
 // 方法：工作经历拖拽排序
@@ -2239,6 +2339,52 @@ const handleDragEnd = () => {
 
 .result-item .el-input {
   flex: 1;
+}
+
+/* 技术架构编辑项 */
+.tech-stack-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.tech-stack-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background-color: #f5f7fa;
+  border-radius: 6px;
+}
+
+.tech-key {
+  font-weight: 500;
+  color: #606266;
+  min-width: 70px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.tech-stack-item .el-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.add-tech-stack {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background-color: #f0f9ff;
+  border: 1px dashed #409eff;
+  border-radius: 6px;
+  width: auto;
+  justify-self: start;
+}
+
+.tech-separator {
+  color: #909399;
+  font-weight: 500;
 }
 
 /* 头像编辑 */
